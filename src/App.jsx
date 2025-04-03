@@ -8,7 +8,6 @@ import { Watermark } from './components/Watermark';
 import { phoneSpecifications } from './data/specifications';
 
 // Constants for pricing calculations
-const CONNECTION_FEE = 10;
 const DEVICE_SETUP_CHARGE = 35;
 const PLANS = {
   "$25": 25,
@@ -25,12 +24,11 @@ const calculateTax = (amount, taxRate) => amount * taxRate;
 const calculatePayNowTotal = (phonePrice, planPrice, boostProtect, bundlePrice = 0, taxRate) => {
   // Calculate taxable subtotal (excluding connection fee)
   const taxableSubtotal = phonePrice + DEVICE_SETUP_CHARGE + bundlePrice + boostProtect + planPrice;
-  const subtotal = taxableSubtotal + CONNECTION_FEE;
+  const subtotal = taxableSubtotal;
   const tax = calculateTax(subtotal, taxRate);
   return {
     devicePrice: phonePrice,
     setupCharge: DEVICE_SETUP_CHARGE,
-    connectionFee: CONNECTION_FEE,
     bundlePrice,
     boostProtect,
     subtotal,
@@ -59,11 +57,10 @@ const calculatePayLaterDueToday = (monthlyPrice, srp, bundlePrice = 0, taxRate) 
   return {
     deviceFinancePrice: monthlyPrice,
     setupCharge: DEVICE_SETUP_CHARGE,
-    connectionFee: CONNECTION_FEE,
     deviceTax,
     bundlePrice,
     bundleTax,
-    total: taxableTotal + deviceTax + bundleTax + CONNECTION_FEE
+    total: taxableTotal + deviceTax + bundleTax
   };
 };
 
@@ -306,13 +303,6 @@ const DetailedPriceBreakdown = ({ breakdown }) => (
       <span>Device Setup Charge:</span>
       </div>
       <span>{breakdown.setupCharge !== null ? `$${breakdown.setupCharge.toFixed(2)}` : 'N/A'}</span>
-    </div>
-    <div className="flex justify-between items-center p-2 hover:bg-gray-50 rounded transition-colors">
-      <div className="flex items-center gap-2">
-        <Phone className="w-4 h-4" />
-      <span>Connection Fee (Non-taxable):</span>
-      </div>
-      <span>{breakdown.connectionFee !== null ? `$${breakdown.connectionFee.toFixed(2)}` : 'N/A'}</span>
     </div>
     {breakdown.bundlePrice > 0 && (
       <div className="flex justify-between items-center p-2 hover:bg-gray-50 rounded transition-colors">
@@ -625,10 +615,6 @@ const PayLaterBundle = ({ phone, taxRate }) => {
             <div className="flex justify-between">
               <span>Device Setup Charge:</span>
               <span>${dueToday.setupCharge.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Connection Fee (Non-taxable):</span>
-              <span>${dueToday.connectionFee.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span>Tax (on device SRP):</span>
