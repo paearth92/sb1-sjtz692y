@@ -26,7 +26,7 @@ const UserProfile = () => {
         className="flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-lg hover:bg-opacity-30 transition-all duration-300"
       >
         <User className="w-5 h-5" />
-        <span className="text-sm">{user?.email || 'User'}</span>
+        <span className="text-sm">{user?.email?.split('@')[0] || 'User'}</span>
       </button>
 
       {isOpen && (
